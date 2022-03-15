@@ -1,0 +1,37 @@
+.home-wrap{
+   position:fixed;
+   top:50%;
+   left:50%;
+   transform: translate(-50%, -50%);
+}
+
+
+.slide-up {
+   transition: all 0.25s;
+}
+.slide-up-enter-active {
+   transition: all 0.25s ease
+}
+.slide-up-leave-active {
+   transition: all 0.25s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-up-enter, .slide-up-leave-active {
+   opacity: 1;
+   transform: translateY(100%);
+}
+.slide-down-enter-active {
+   transition-duration: 0.7s;
+}
+.slide-down-enter-to {
+   overflow: hidden;
+   max-height: 300px;
+}
+.slide-down-enter {
+   overflow: hidden;
+   max-height: 0;
+}
+.pin{
+   color: #00cc78;
+   text-decoration: underline;
+   cursor: pointer;
+}
