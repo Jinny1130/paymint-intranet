@@ -7,25 +7,33 @@ const NameCard = () => {
    const [language, setLanguage] = useState('KOR');
    const [errMsg, setErrMsg] = useState('');
    const [showPop, setShowPop] = useState(false);
+   const [authNum, setAuthNum] = useState([]);
 
 
    // 언어바꾸기
    const changeLanguage = (e, lang) => {
-      console.log('click')
       setLanguage(lang)
    };
 
    // pin 팝업 열기
    const showPinPop = (e) => {
-      e.preventDefault();
+      // e.preventDefault();
       setShowPop(true);
    }
 
    // pin 팝업 닫기
    const closePinPop = (e) => {
-      e.preventDefault();
+      // e.preventDefault();
       setShowPop(false);
    }
+
+   // auth 번호 입력시 authNum 리스트에 추가
+   const pushAuthNum = (e, num) => {
+      // e.preventDefault();
+      authNum[num] = e.target.value
+   }
+
+
 
    return (
       <div id="main" className="wrapper">
@@ -68,10 +76,10 @@ const NameCard = () => {
             {/* 인증 */}
             <div className='name_card_bt text-align-center'>
                <div className='input_wrapper'>
-                  <input type="tel" id="tel_1" maxLength={1} />
-                  <input type="tel" id="tel_2" maxLength={1} />
-                  <input type="tel" id="tel_3" maxLength={1} />
-                  <input type="tel" id="tel_4" maxLength={1} />
+                  <input type="tel" id="tel_1" maxLength={1} value={authNum[0]} onInput={(e) => pushAuthNum(e, 0)}/>
+                  <input type="tel" id="tel_2" maxLength={1} value={authNum[1]} onInput={(e) => pushAuthNum(e, 1)}/>
+                  <input type="tel" id="tel_3" maxLength={1} value={authNum[2]} onInput={(e) => pushAuthNum(e, 2)}/>
+                  <input type="tel" id="tel_4" maxLength={1} value={authNum[3]} onInput={(e) => pushAuthNum(e, 3)}/>
                </div>
 
                <div className='pin_num'>
@@ -126,14 +134,14 @@ const NameCard = () => {
                      <button><img src={require('../assets/images/icon-24-message.png')}/></button>
                      <button><img src={require("../assets/images/icon-24-call.png")}/></button>
                      <p className='card_title'>Mobile.</p>
-                     <p className='content'>+82 10-1234-5678</p>
+                     <p className='content'>+82 10<br/>1234 5678</p>
                   </div>
                   <div className='line_white'>
                      <div className='left'></div><div className='right'></div>
                   </div>
                   <div className='card_section'>
                      <button><img src={require('../assets/images/icon-24-mail.png')}/></button>
-                     <p className='card_title'>Web.</p>   
+                     <p className='card_title'>Email.</p>   
                      <p className='content'>mint11<br/>@paymint.co.kr</p>
                   </div>
                   <div className="card_section_gr">
@@ -144,8 +152,8 @@ const NameCard = () => {
                   </div>
                   {
                      function(){
-                        if(language == 'KOR') return (<div className='section_sub_title'> 주식회사</div>)
-                        else return (<div className='section_sub_title'> Inc.</div>)
+                        if(language == 'KOR') return (<div className='section_sub_title'>페이민트 주식회사</div>)
+                        else return (<div className='section_sub_title'>Paymint Inc.</div>)
                      }()
                   }
                   <div className="card_section small">
@@ -159,7 +167,7 @@ const NameCard = () => {
                   <div className="card_section small">
                      <button><img src={require("../assets/images/icon-24-map.png")} alt="icon" /></button>
                      <p className="card_title">Add.</p>
-                     <p>서울 주소주소주소 <br/> 12345</p>
+                     <p>{'서울시 성동구 상원1길 26 서울숲A타워 409호'}<br/>({'04779'})</p>
                   </div>
                   <div className="line_white">
                      <div className="left"></div><div className="right"></div>
