@@ -17,22 +17,31 @@ const NameCard = () => {
 
    // pin 팝업 열기
    const showPinPop = (e) => {
-      // e.preventDefault();
       setShowPop(true);
    }
 
    // pin 팝업 닫기
    const closePinPop = (e) => {
-      // e.preventDefault();
       setShowPop(false);
    }
 
    // auth 번호 입력시 authNum 리스트에 추가
    const pushAuthNum = (e, num) => {
-      // e.preventDefault();
-      authNum[num] = e.target.value
+      setAuthNum(authNum =>[... authNum, e.target.value])
    }
 
+   // 인풋 값 입력시 자동 다음탭으로
+   const autoTab = (e, nextInput) => {
+      if(e.target.value.length === 1){
+         // 마지막 pin 4자리까지 입력되면 검색
+         if(authNum.join('').length === 4){
+            console.log('인증번호 검사하기!')
+         }
+         
+         // 입력할때마다 자동 다음탭
+         document.getElementById(nextInput).focus();
+      }
+   }
 
 
    return (
@@ -76,10 +85,10 @@ const NameCard = () => {
             {/* 인증 */}
             <div className='name_card_bt text-align-center'>
                <div className='input_wrapper'>
-                  <input type="tel" id="tel_1" maxLength={1} value={authNum[0]} onInput={(e) => pushAuthNum(e, 0)}/>
-                  <input type="tel" id="tel_2" maxLength={1} value={authNum[1]} onInput={(e) => pushAuthNum(e, 1)}/>
-                  <input type="tel" id="tel_3" maxLength={1} value={authNum[2]} onInput={(e) => pushAuthNum(e, 2)}/>
-                  <input type="tel" id="tel_4" maxLength={1} value={authNum[3]} onInput={(e) => pushAuthNum(e, 3)}/>
+                  <input type="tel" id="tel_1" maxLength={1} value={authNum[0] || ''} onInput={(e) => pushAuthNum(e)} onKeyUp={(e) => autoTab(e, 'tel_2')}/>
+                  <input type="tel" id="tel_2" maxLength={1} value={authNum[1] || ''} onInput={(e) => pushAuthNum(e)} onKeyUp={(e) => autoTab(e, 'tel_3')}/>
+                  <input type="tel" id="tel_3" maxLength={1} value={authNum[2] || ''} onInput={(e) => pushAuthNum(e)} onKeyUp={(e) => autoTab(e, 'tel_4')}/>
+                  <input type="tel" id="tel_4" maxLength={1} value={authNum[3] || ''} onInput={(e) => pushAuthNum(e)} onKeyUp={(e) => autoTab(e, 'tel_4')}/>
                </div>
 
                <div className='pin_num'>
