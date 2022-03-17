@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './NameCard.css'
 import PinPopup from './PinPopup';
+import * as API from '../common/service'
 
 
 const NameCard = () => {
@@ -9,6 +10,52 @@ const NameCard = () => {
    const [showPop, setShowPop] = useState(false);
    const [authNum, setAuthNum] = useState([]);
 
+
+   // 페이지 진입시 유저 정보 가져오기
+   async function init(){
+      try{
+         let params = {
+            lang: language,
+            auto_keyword: '',
+            url: 'ggogo33',
+            filename:''
+         }
+
+         const rs = await API.init(params)
+         console.log(rs)
+      }catch(err){
+         console.log(err)
+      }
+   }
+
+   // 핀번호 입력후 유저상세정보 검색
+   const getNameCardInfo = async () => {
+      try{
+         let params = {
+            lang: language,
+            auto_keyword: authNum.join(''),
+            url: 'ggogo33',
+            filename:''
+         }
+
+         const rs = await API.search(params)
+
+         // rs.data.result 결과
+         // {
+         //    first_name: "우진"
+         //    last_name: "최"
+         //    organization: "페이민트"
+         //    photo: "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDABALDA4MChAOD"
+         //    role: "연구개발파트, 데브옵스팀"
+         //    seq: 57
+         //    title: "매니저"
+         // }
+
+         console.log(rs)
+      }catch(err){
+         console.log(err)
+      }
+   }
 
    // 언어바꾸기
    const changeLanguage = (e, lang) => {
@@ -35,13 +82,15 @@ const NameCard = () => {
       if(e.target.value.length === 1){
          // 마지막 pin 4자리까지 입력되면 검색
          if(authNum.join('').length === 4){
-            console.log('인증번호 검사하기!')
+            getNameCardInfo();
          }
          
          // 입력할때마다 자동 다음탭
          document.getElementById(nextInput).focus();
       }
    }
+
+   
 
 
    return (
