@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './NameCard.css'
 import PinPopup from './PinPopup';
 import * as API from '../common/service'
+import MemberDetail from './MemberDetail';
 
 
 const NameCard = () => {
@@ -10,19 +11,27 @@ const NameCard = () => {
    const [showPop, setShowPop] = useState(false);
    const [authNum, setAuthNum] = useState([]);
 
+   const [memberInfo, setMemberInfo] = useState({}); // 멤버 정보
+
+   const [showDetail, setShowDetail] = useState(false);
+
+   useEffect(() =>{
+      init();
+   },[language])
 
    // 페이지 진입시 유저 정보 가져오기
    async function init(){
       try{
          let params = {
             lang: language,
-            auto_keyword: '',
-            url: 'ggogo33',
+            auth_keyword: authNum.join(''),
+            url: 'minki',
             filename:''
          }
 
          const rs = await API.init(params)
-         console.log(rs)
+
+         setMemberInfo(rs.data.result);
       }catch(err){
          console.log(err)
       }
@@ -33,25 +42,15 @@ const NameCard = () => {
       try{
          let params = {
             lang: language,
-            auto_keyword: authNum.join(''),
-            url: 'ggogo33',
+            auth_keyword: authNum.join(''),
+            url: 'minki',
             filename:''
          }
 
-         const rs = await API.search(params)
+         const rs = await API.search(params);
+         setMemberInfo(rs.data.result);
+         setShowDetail(true);
 
-         // rs.data.result 결과
-         // {
-         //    first_name: "우진"
-         //    last_name: "최"
-         //    organization: "페이민트"
-         //    photo: "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDABALDA4MChAOD"
-         //    role: "연구개발파트, 데브옵스팀"
-         //    seq: 57
-         //    title: "매니저"
-         // }
-
-         console.log(rs)
       }catch(err){
          console.log(err)
       }
@@ -90,6 +89,11 @@ const NameCard = () => {
       }
    }
 
+   // 페에지 이동
+   const showPage = (e, url) => {
+      window.location.href = url;
+   }
+
    
 
 
@@ -107,22 +111,22 @@ const NameCard = () => {
                   }()
                }
                <div id="header_content" className="header_content">
-                  <img id="icon" src={require("../assets/images/pray_rupy.JPG")} className="icon_person" alt="icon"/>
+                  <img id="icon" src={`data:image/png;base64,${memberInfo.photo}`} className="icon_person" alt="icon"/>
                   {
                      function(){
                         if(language == 'KOR') return (
                            <>
-                              <h1 className="name">김민트</h1>
+                              <h1 className="name">{memberInfo.last_name}{memberInfo.first_name}</h1>
                               <p id="part" className="font_16 margin_top_12" style={{lineHeight: 1.5}}>
-                                 <b>{'연구개발파트'}, {'데브옵스팀'}<br/>{'매니저'}</b>
+                                 <b>{memberInfo.role}<br/>{memberInfo.title}</b>
                               </p>
                            </>
                         )
                         else return (
                            <>
-                              <h1 className="name">Mint Kim</h1>
+                              <h1 className="name">{memberInfo.last_name} {memberInfo.first_name}</h1>
                               <p id="part" className="font_16 margin_top_12" style={{lineHeight: 1.5}}>
-                                 <b>{'R&D Dept'}, {'Devops Team'}<br/>{'manager'}</b>
+                                 <b>{memberInfo.role}<br/>{memberInfo.title}</b>
                               </p>
                            </>
                         )
@@ -147,12 +151,12 @@ const NameCard = () => {
                   function (){
                      if(language == 'KOR') return (
                         <p className='margin_top_16' style={{lineHeight: 1.57}}>
-                           <b>{'김민트'}</b>님 명함에 있는<br/><span className='pin' onClick={showPinPop}>PIN번호 4자리</span>를 입력해주세요.
+                           <b>{memberInfo.last_name}{memberInfo.first_name}</b>님 명함에 있는<br/><span className='pin' onClick={showPinPop}>PIN번호 4자리</span>를 입력해주세요.
                         </p>
                      )
                      else return (
                         <div className='margin_top_16' style={{lineHeight: 1.57}}>
-                           Please enter <span className='pin' onClick={showPinPop}>the 4 digit PIN number</span><br/>on {'MINT'} {'KIM'}'s business card.
+                           Please enter <span className='pin' onClick={showPinPop}>the 4 digit PIN number</span><br/>on {memberInfo.last_name} {memberInfo.first_name}'s business card.
                         </div>
                      )
                   }()
@@ -172,7 +176,7 @@ const NameCard = () => {
                   }()
                }
 
-               {/* <div className='loading margin_top_28'>
+                {/* <div className='loading margin_top_28'>
                   <div className='line'></div>
                   <div className='line'></div>
                   <div className='line'></div>
@@ -189,24 +193,22 @@ const NameCard = () => {
                {/* <CSSTransition className="slide-up"> */}
                {/* <div className='content'>
                   <div className="card_section margin_top_24">
-                     <button><img src={require('../assets/images/icon-24-message.png')}/></button>
-                     <button><img src={require("../assets/images/icon-24-call.png")}/></button>
+                     <button onClick={(e) => showPage(e, 'sms:' + memberInfo.cell_phone1 + memberInfo.cell_phone2 + memberInfo.cell_phone3)}><img src={require('../assets/images/icon-24-message.png')}/></button>
+                     <button onClick={(e) => showPage(e, 'tel:' + memberInfo.cell_phone1 + memberInfo.cell_phone2 + memberInfo.cell_phone3)}><img src={require("../assets/images/icon-24-call.png")}/></button>
                      <p className='card_title'>Mobile.</p>
-                     <p className='content'>+82 10<br/>1234 5678</p>
+                     <p className='content'>+82 {memberInfo.cell_phone1}<br/>{memberInfo.cell_phone2} {memberInfo.cell_phone3}</p>
                   </div>
                   <div className='line_white'>
                      <div className='left'></div><div className='right'></div>
                   </div>
                   <div className='card_section'>
-                     <button><img src={require('../assets/images/icon-24-mail.png')}/></button>
+                     <button onClick={(e) => showPage(e, 'mailto:' + memberInfo.work_email + '@paymint.co.kr' )}><img src={require('../assets/images/icon-24-mail.png')}/></button>
                      <p className='card_title'>Email.</p>   
-                     <p className='content'>mint11<br/>@paymint.co.kr</p>
+                     <p className='content'>{memberInfo.work_email}<br/>@paymint.co.kr</p>
                   </div>
                   <div className="card_section_gr">
                      <p className="card_title margin_bt_16">Favorite Word.</p>
-                     <span>Hi</span>
-                     <span>Hello</span>
-                     <span>Bye</span>
+                     {<span>{memberInfo.note}</span>}
                   </div>
                   {
                      function(){
@@ -215,7 +217,7 @@ const NameCard = () => {
                      }()
                   }
                   <div className="card_section small">
-                     <button><img src={require('../assets/images/icon-24-web.png')}/></button>
+                     <button onClick={(e) => showPage(e, 'http://www.paymint.co.kr/hp/index.html')}><img src={require('../assets/images/icon-24-web.png')}/></button>
                      <p className="card_title">Web.</p>
                      <p>paymint.co.kr</p>
                   </div>
@@ -223,7 +225,7 @@ const NameCard = () => {
                      <div className='left'></div><div className='right'></div>
                   </div>
                   <div className="card_section small">
-                     <button><img src={require("../assets/images/icon-24-map.png")} alt="icon" /></button>
+                     <button onClick={(e) => showPage(e, 'https://goo.gl/maps/6TKxkHHFitLKFHXu8')} ><img src={require("../assets/images/icon-24-map.png")} alt="icon" /></button>
                      <p className="card_title">Add.</p>
                      <p>{'서울시 성동구 상원1길 26 서울숲A타워 409호'}<br/>({'04779'})</p>
                   </div>
@@ -231,26 +233,27 @@ const NameCard = () => {
                      <div className="left"></div><div className="right"></div>
                   </div>
                   <div className="card_section small">
-                     <button><img src={require("../assets/images/icon-24-call.png")} alt="icon"/></button>
+                     <button onClick={(e) => showPage(e, 'tel:' + memberInfo.work_phone)}><img src={require("../assets/images/icon-24-call.png")} alt="icon"/></button>
                      <p className="card_title">Tel.</p>
-                     <p>+82 10-1234-5678</p>
+                     <p>{memberInfo.work_phone}</p>
                   </div>
                   <div className="line_white">
                      <div className="left"></div><div className="right"></div>
                   </div>
                   <div className="card_section small">
                      <p className="card_title">Fax.</p>
-                     <p>+82 10-1212-3434</p>
+                     <p>{memberInfo.work_fax}</p>
                   </div>
                   <button className="btn_down"><img src={require("../assets/images/icon-32-m.png")} alt="icon"/>연락처 다운로드</button>
                   <div className="footer_gr">
                      <img src={require("../assets/images/powered-by-paymint.png")} alt="powered"/>
                   </div>
 
-
                </div> */}
                {/* </CSSTransition> */}
             {/* </TransitionGroup> */}
+
+            { showDetail ?  <MemberDetail lang={language} member={memberInfo} showPage={showPage} ></MemberDetail> : <></> }
          </div>
 
          { showPop ? <PinPopup lang={language} close={closePinPop}/> : <></> }

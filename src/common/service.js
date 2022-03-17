@@ -25,7 +25,7 @@ export function init(params) {
 
     return axios({
         method:"post"
-        ,url: ('https://intranet-api.paymint.co.kr/paymint/namecard' + params.url)
+        ,url: 'https://intranet-api.paymint.co.kr/paymint/namecard/' + params.url
         ,data:params
         ,timeout : RESPONSE_TIME_OUT
     });
@@ -36,7 +36,7 @@ export function search(params) {
 
     return axios({
         method:"post"
-        ,url: 'https://intranet-api.paymint.co.kr/paymint/namecard/ggogo33'
+        ,url: 'https://intranet-api.paymint.co.kr/paymint/namecard/' + params.url
         ,data:params
         ,timeout : RESPONSE_TIME_OUT
     });
