@@ -7,13 +7,14 @@ import MemberDetail from './MemberDetail';
 
 const NameCard = () => {
    const [language, setLanguage] = useState('KOR');
-   const [errMsg, setErrMsg] = useState('');
+   const [loadingMsg, setLoadingMsg] = useState('');
    const [showPop, setShowPop] = useState(false);
    const [authNum, setAuthNum] = useState([]);
 
    const [memberInfo, setMemberInfo] = useState({}); // 멤버 정보
 
    const [showDetail, setShowDetail] = useState(false);
+
 
    useEffect(() =>{
       init();
@@ -46,10 +47,11 @@ const NameCard = () => {
             url: 'minki',
             filename:''
          }
-
+         
          const rs = await API.search(params);
          setMemberInfo(rs.data.result);
          setShowDetail(true);
+         msg('success');
 
       }catch(err){
          console.log(err)
@@ -81,6 +83,7 @@ const NameCard = () => {
       if(e.target.value.length === 1){
          // 마지막 pin 4자리까지 입력되면 검색
          if(authNum.join('').length === 4){
+            msg('loading');
             getNameCardInfo();
          }
          
@@ -89,9 +92,42 @@ const NameCard = () => {
       }
    }
 
-   // 페에지 이동
+   // 페이지 이동
    const showPage = (e, url) => {
       window.location.href = url;
+   }
+
+   // 핀코드 검색 결과
+   const msg = (data) => {
+      setLoadingMsg(data);
+   }
+
+   // 로딩
+   const loading = () => {
+      if(loadingMsg === 'loading'){
+         return(
+            <div className='loading margin_top_28'>
+               <div className='line'></div>
+               <div className='line'></div>
+               <div className='line'></div>
+               <div className='line'></div>
+            </div>
+         )
+      } else if(loadingMsg === 'error'){
+         if(language === 'KOR'){
+            return (
+               <div className='speech-bubble center_v'>
+                  <p>올바른 번호가 아닙니다.<br/>번호를 확인하시고 다시 입력해주세요.</p>
+               </div>
+            )
+         } else {
+            return (
+               <div className='speech-bubble center_v'>
+                  <p>Please check the number <br/> and enter it again.</p>
+               </div>
+            )
+         }
+      }
    }
 
    
@@ -161,27 +197,8 @@ const NameCard = () => {
                      )
                   }()
                }
-               {
-                  function(){
-                     if(errMsg !== '' && language === 'KOR') return (
-                        <div className='speech-bubble center_v'>
-                           <p>올바른 번호가 아닙니다.<br/>번호를 확인하시고 다시 입력해주세요.</p>
-                        </div>
-                     )
-                     else if(errMsg !== '' && language !== 'KOR') return (
-                        <div className='speech-bubble center_v'>
-                           <p>Please check the number <br/> and enter it again.</p>
-                        </div>
-                     )
-                  }()
-               }
-
-                {/* <div className='loading margin_top_28'>
-                  <div className='line'></div>
-                  <div className='line'></div>
-                  <div className='line'></div>
-                  <div className='line'></div>
-               </div> */}
+               {/* loading 및 erromsg */}
+               {loading()}
 
                <div className='footer'>
                   <img src={require('../assets/images/powered-by-paymint.png')}/>
