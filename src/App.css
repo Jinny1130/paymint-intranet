@@ -387,7 +387,6 @@ h3{
     position: fixed;
     width: 100%;
     z-index: 1000;
-    transition: 0.3s all;
 }
 .name_card_bt{
     box-sizing: border-box;
