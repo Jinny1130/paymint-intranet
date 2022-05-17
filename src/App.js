@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<NameCard/>}/>
+        <Route path="/:memberName" element={<NameCard/>}/>
         <Route path="*" element={<Whoops404/>}/>
       </Routes>
     </div>
