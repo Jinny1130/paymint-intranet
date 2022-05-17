@@ -184,7 +184,7 @@ const NameCard = () => {
       let scrollPosition = document.getElementById('card').scrollTop;
       let heightTest = 320 - scrollPosition;
 
-      if(scrollTop > 0 && scrollTop < 260){
+      if(scrollTop > 0 && scrollTop < 212){
          if(scrollTop > 100){
             header.style.boxShadow = '0 6px 12px 0 rgba(0, 0, 0, 0.1)';
          } else{
@@ -194,17 +194,18 @@ const NameCard = () => {
          header.style.height = heightTest + 'px';
          document.getElementById("part").style.opacity = 1 - (scrollTop/100) + '';
          document.getElementById("logo").style.top = getSize(32,-64,scrollTop);
-         // document.getElementById("language").style.top = getSize(32,-64,scroll);
+         document.getElementById("language").style.top = getSize(32,-64,scrollTop);
          document.getElementById("icon").style.width = getSize(96,48,scrollTop);
          document.getElementById("icon").style.height = getSize(96,48,scrollTop);
          document.getElementById("icon").style.marginBottom = getSize(16,8,scrollTop);
-         // document.getElementById("name").style.fontSize = getSize(32,16,scroll);
+         document.getElementById("name").style.fontSize = getSize(32,16,scrollTop);
+         document.getElementById("header_content").style.top = getSize(84,20,scrollTop);
       }
       
    }
 
    function getSize(max, min, scrollTop){
-      return max - ((max-min)/259)*scrollTop + 'px'
+      return max - ((max-min)/211)*scrollTop + 'px'
    }
 
    
@@ -217,8 +218,8 @@ const NameCard = () => {
                <span id='logo' className='logo'><img src={require("../assets/images/mint-crew.png")} alt='logo'/></span>
                {
                   function(){
-                     if(language === 'KOR') return (<button className="btn_language" onClick={(e) => changeLanguage(e, 'ENG')}>ENG</button>)
-                     else return (<button className="btn_language" onClick={(e) => changeLanguage(e, 'KOR')}>KOR</button>)
+                     if(language === 'KOR') return (<button className="btn_language" id='language' onClick={(e) => changeLanguage(e, 'ENG')}>ENG</button>)
+                     else return (<button className="btn_language" id='language' onClick={(e) => changeLanguage(e, 'KOR')}>KOR</button>)
                   }()
                }
                <div id="header_content" className="header_content">
@@ -227,7 +228,7 @@ const NameCard = () => {
                      function(){
                         if(language === 'KOR') return (
                            <>
-                              <h1 className="name">{memberInfo.last_name}{memberInfo.first_name}</h1>
+                              <h1 className="name" id="name">{memberInfo.last_name}{memberInfo.first_name}</h1>
                               <p id="part" className="font_16 margin_top_12" style={{lineHeight: 1.5}}>
                                  <b>{memberInfo.role}<br/>{memberInfo.title}</b>
                               </p>
@@ -235,7 +236,7 @@ const NameCard = () => {
                         )
                         else return (
                            <>
-                              <h1 className="name">{memberInfo.last_name} {memberInfo.first_name}</h1>
+                              <h1 className="name" id="name">{memberInfo.last_name} {memberInfo.first_name}</h1>
                               <p id="part" className="font_16 margin_top_12" style={{lineHeight: 1.5}}>
                                  <b>{memberInfo.role}<br/>{memberInfo.title}</b>
                               </p>
