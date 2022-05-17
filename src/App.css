@@ -387,6 +387,7 @@ h3{
     position: fixed;
     width: 100%;
     z-index: 1000;
+    transition: 0.3s all;
 }
 .name_card_bt{
     box-sizing: border-box;
@@ -643,7 +644,7 @@ h3{
     right: 0;
 }
 .content{
-    margin-top: 343px;
+    margin-top: 360px;
 }
 .header_content{
     text-align: center;

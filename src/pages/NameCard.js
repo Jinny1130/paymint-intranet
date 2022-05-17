@@ -111,14 +111,18 @@ const NameCard = () => {
    const autoTab = (e, nextInput) => {
       if(e.target.value.length === 1){
          // 마지막 pin 4자리까지 입력되면 검색
-         if(!nextInput){
-            document.getElementById('tel_4').blur();
+         let authNum = authNumber();
+         if(authNum.length === 4){
             msg('loading');
             getNameCardInfo();
             return;
          }
          
          // 입력할때마다 자동 다음탭
+         if(!nextInput){
+            document.getElementById('tel_4').blur();
+            return;  
+         }
          document.getElementById(nextInput).focus();
       }
    }
@@ -173,10 +177,40 @@ const NameCard = () => {
       }
    }
 
+   function scroll (e) {
+      console.log(e.target.scrollTop)
+      let scrollTop = e.target.scrollTop;
+      let header = document.getElementById('header');
+      let scrollPosition = document.getElementById('card').scrollTop;
+      let heightTest = 320 - scrollPosition;
+
+      if(scrollTop > 0 && scrollTop < 260){
+         if(scrollTop > 100){
+            header.style.boxShadow = '0 6px 12px 0 rgba(0, 0, 0, 0.1)';
+         } else{
+            header.style.boxShadow = '0 1px 0 0 rgba(0, 0, 0, 0.1)';
+         }
+
+         header.style.height = heightTest + 'px';
+         document.getElementById("part").style.opacity = 1 - (scrollTop/100) + '';
+         document.getElementById("logo").style.top = getSize(32,-64,scrollTop);
+         // document.getElementById("language").style.top = getSize(32,-64,scroll);
+         document.getElementById("icon").style.width = getSize(96,48,scrollTop);
+         document.getElementById("icon").style.height = getSize(96,48,scrollTop);
+         document.getElementById("icon").style.marginBottom = getSize(16,8,scrollTop);
+         // document.getElementById("name").style.fontSize = getSize(32,16,scroll);
+      }
+      
+   }
+
+   function getSize(max, min, scrollTop){
+      return max - ((max-min)/259)*scrollTop + 'px'
+   }
+
    
    return (
       <div id="main" className="wrapper">
-         <div id="card" className='name_card'>
+         <div id="card" className='name_card' onScroll={scroll}>
 
             {/* 헤더 */}
             <div id='header' className='name_card_top'>
@@ -246,7 +280,7 @@ const NameCard = () => {
                </div>
             </div> : <></>}
 
-            { showDetail ?  <MemberDetail lang={language} member={memberInfo} showPage={showPage} ></MemberDetail> : <></> }
+            { showDetail ?  <MemberDetail lang={language} member={memberInfo} showPage={showPage} scroll={scroll}   ></MemberDetail> : <></> }
          </div>
 
          { showPop ? <PinPopup lang={language} close={closePinPop}/> : <></> }

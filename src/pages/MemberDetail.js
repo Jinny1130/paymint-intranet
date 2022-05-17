@@ -3,8 +3,8 @@ import React from "react";
 const MemberDetail = (props) => {
 
     return (
-        <div className='content'>
-                  <div className="card_section margin_top_24">
+        <div className='content' onScroll={(e) => props.scroll(e)}>
+                  <div className="card_section">
                      <button onClick={(e) => props.showPage(e, 'sms:' + props.member.cell_phone1+ props.member.cell_phone2+ props.member.cell_phone3)}><img src={require('../assets/images/icon-24-message.png')} alt="icon"/></button>
                      <button onClick={(e) => props.showPage(e, 'tel:' + + props.member.cell_phone1+ props.member.cell_phone2+ props.member.cell_phone3)}><img src={require("../assets/images/icon-24-call.png")} alt="icon"/></button>
                      <p className='card_title'>Mobile.</p>
